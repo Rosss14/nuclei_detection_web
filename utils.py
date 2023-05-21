@@ -6,11 +6,11 @@ from PIL import Image
 
 from six import BytesIO
 
-from object_detection.utils import visualization_utils as vis_util
-from object_detection.utils import label_map_util
+from visualization import *
 
 model = tf.saved_model.load('saved_model')
-category_index = label_map_util.create_category_index_from_labelmap('label_map.pbtxt', use_display_name=True)
+## category_index = label_map_util.create_category_index_from_labelmap('label_map.pbtxt', use_display_name=True)
+category_index = {1: {'id': 1, 'name': 'tumor'}, 2: {'id':2, 'name':'stromal'}, 3: {'id':3, 'name':'sTIL'}}
 
 def load_image_into_numpy_array(path):
   img_data = tf.io.gfile.GFile(path, 'rb').read()
@@ -41,16 +41,6 @@ def run_inference_for_single_image(model, image):
 
   # detection_classes should be ints.
   output_dict['detection_classes'] = output_dict['detection_classes'].astype(np.int64)
-   
-  # Handle models with masks:
-  #if 'detection_masks' in output_dict:
-    # Reframe the the bbox mask to the image size.
-  #  detection_masks_reframed = utils_ops.reframe_box_masks_to_image_masks(
-  #            output_dict['detection_masks'], output_dict['detection_boxes'],
-  #             image.shape[0], image.shape[1])      
-  #  detection_masks_reframed = tf.cast(detection_masks_reframed > 0.5,
-  #                                     tf.uint8)
-  #  output_dict['detection_masks_reframed'] = detection_masks_reframed.numpy()
     
   return output_dict
 
@@ -62,15 +52,14 @@ def detect_and_save(model, image, category_index):
 
   image_np_det = np.copy(image_np)
 
-  vis_util.visualize_boxes_and_labels_on_image_array(image_np_det,
+  visualize_boxes_and_labels_on_image_array(image_np_det,
     output_dict['detection_boxes'],
     output_dict['detection_classes'],
     output_dict['detection_scores'],
     category_index,
-    instance_masks=output_dict.get('detection_masks_reframed', None),
     use_normalized_coordinates=True,
     min_score_thresh=0.36,
-    line_thickness=1)
+    line_thickness=2)
   
   image_det_path = image[:-4] + '_detection.png'
 
