@@ -1,0 +1,14 @@
+item {
+	id: 1
+	name: 'tumor'
+}
+
+item {
+	id: 2
+	name: 'stromal'
+}
+
+item {
+	id: 3
+	name: 'sTIL'
+}

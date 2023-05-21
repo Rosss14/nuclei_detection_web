@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Carga de imagen{% endblock %}
+
+{% block content %}
+    <h1> Cargador de im&aacutegenes</h1>
+    <p> Sube la imagen con n&uacutecleos para detectar </p>
+    <form action = "http://localhost:5000/uploader" 
+            method = "POST" 
+            enctype="multipart/form-data">
+        <input type="file" name="file" />
+        <br>
+        <br>
+        <button type="submit" class="btn btn-primary"> Subir </button>
+    </form>
+{% endblock %}
